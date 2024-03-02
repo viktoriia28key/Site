@@ -13,6 +13,13 @@ from django.contrib.auth import authenticate, login
 from .forms import LoginForm
 from django.contrib.auth.decorators import login_required
 
+
+@login_required
+def dashboard(request):
+    user=request.user
+    posts_pub=Post.objects.filter(author=user, status='published')
+    posts_draft = Post.objects.filter(author=user, status='draft')
+    return render(request,'blog/account/dashboard.html',{'post_pub':posts_pub,'post_draft':posts_draft})
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
